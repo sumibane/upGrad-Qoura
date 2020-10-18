@@ -73,8 +73,28 @@ public class UserDao {
         }
     }
 
+    /**
+     * Database Operation to create new Auth Token
+     * @param authEntity : UserAuthEntity Token
+     * @return UserAuthEntity
+     */
     public UserAuthEntity createAuthToken(final UserAuthEntity authEntity){
         entityManager.persist(authEntity);
         return authEntity;
+    }
+
+    /**
+     * Database Operation to search user by AuthToken
+     * @param accessToken : UserAuthEntity Acess token
+     * @return UserAuthEntity if found, null otherwise
+     */
+    public UserAuthEntity getUserAuthToken(final String accessToken){
+        try{
+            return entityManager.createNamedQuery("authTokenbyAcessToken", UserAuthEntity.class)
+                    .setParameter("accessToken", accessToken).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
     }
 }

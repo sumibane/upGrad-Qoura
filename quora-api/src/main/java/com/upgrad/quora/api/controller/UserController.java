@@ -1,12 +1,14 @@
 package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.SigninResponse;
+import com.upgrad.quora.api.model.SignoutResponse;
 import com.upgrad.quora.api.model.SignupUserRequest;
 import com.upgrad.quora.api.model.SignupUserResponse;
 import com.upgrad.quora.service.business.UserBusinessService;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -76,13 +78,29 @@ public class UserController {
         //Extract the username and array by splitting the decoded text using :
         String[] split = decodedText.split(":");
         UserAuthEntity userAuthEntity = userBusinessService.signin(split[0], split[1]);
-
+        //Create new singinResponse Object
         SigninResponse signinResponse = new SigninResponse();
         signinResponse.setId(userAuthEntity.getUserid().getUuid());
         signinResponse.setMessage("SIGNED IN SUCCESSFULLY");
-
+        //Create new Header to attach with the payload
         HttpHeaders headers = new HttpHeaders();
         headers.add("access_token",userAuthEntity.getAccessToken());
         return  new ResponseEntity<>(signinResponse,headers,HttpStatus.OK);
+    }
+
+
+    /**
+     * Controller Method for User Signout Function
+     * @param authorization : HTTP Authorization header
+     * @return SignoutResponse : HTTP Singout Response
+     * @throws SignOutRestrictedException
+     */
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout")
+    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException{
+
+        final UserEntity userEntity = userBusinessService.signout(authorization);
+
+        SignoutResponse signoutResponse = new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+        return new ResponseEntity<>(signoutResponse,HttpStatus.OK);
     }
 }

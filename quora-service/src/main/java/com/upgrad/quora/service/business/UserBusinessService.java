@@ -4,9 +4,11 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -27,7 +29,7 @@ public class UserBusinessService {
      * @return UserEntity : New User Object
      * @throws SignUpRestrictedException only if validation fails
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signUp(UserEntity userEntity) throws SignUpRestrictedException{
         //Check if the userName exists before creating
         if(userDao.getUserByUserName(userEntity.getUserName())){
@@ -54,7 +56,7 @@ public class UserBusinessService {
      * @return UserAuthEntitiy : Authenication Token Entity
      * @throws AuthenticationFailedException only if authentication fails
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity signin(final String userName, final String password) throws AuthenticationFailedException{
         UserEntity userEntity = userDao.searchUserByUsername(userName);
         if(userEntity == null)
@@ -63,10 +65,10 @@ public class UserBusinessService {
         final String encryptedPassword = cryptographyProvider.encrypt(password, userEntity.getSalt());
         if(encryptedPassword.equals(userEntity.getPassword())){
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
-
+            //Time Logs
             final ZonedDateTime now = ZonedDateTime.now();
             final ZonedDateTime expiry = now.plusHours(8);
-
+            //Create new userAuthEntity to create a AuthToken
             UserAuthEntity authUser = new UserAuthEntity();
             authUser.setUuid(UUID.randomUUID().toString());
             authUser.setUserid(userEntity);
@@ -80,5 +82,24 @@ public class UserBusinessService {
         }
         else
             throw new AuthenticationFailedException("ATH-002","Password Failed");
+    }
+
+
+    /**
+     * The method will validate the user name and emil and login if both are correct
+     * @param authorization : HTTP Basic Authorization Header
+     * @return UserEntity : Detail of the user being signed out
+     * @throws SignOutRestrictedException when the function is called without the user being logged in
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserEntity signout(final String authorization) throws SignOutRestrictedException{
+
+        UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
+        if(userAuthEntity == null)
+            throw new SignOutRestrictedException("SGR-001","User is not Signed in");
+
+        final ZonedDateTime now = ZonedDateTime.now();
+        userAuthEntity.setLogoutAt(now);
+        return userAuthEntity.getUserid();
     }
 }
