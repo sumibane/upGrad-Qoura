@@ -1,6 +1,6 @@
 
 .idea/
 External Jar/
-/qoura-api/target/
-/qoura-db/target/
-/qoura-service/target/
+/quora-api/target/
+/quora-db/target/
+/quora-service/target/

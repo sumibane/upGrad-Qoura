@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.dao;
 
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -12,14 +13,24 @@ public class UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Database Operation to create a new user
+     * @param userEntity : User object to be created
+     * @return UserEntity : New User Object
+     */
     public UserEntity createUser(final UserEntity userEntity){
         entityManager.persist(userEntity);
         return userEntity;
     }
 
+    /**
+     * Database Operation to search user by UserName
+     * @param userName : Username that needs to be searched
+     * @return Boolean : True if found, otherwise false.
+     */
     public Boolean getUserByUserName(final String userName){
         try{
-              UserEntity result = entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
+              entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
                     .setParameter("userName", userName).getSingleResult();
               return true;
         }
@@ -28,6 +39,11 @@ public class UserDao {
             return false;
         }
     }
+    /**
+     * Database Operation to search user by user email
+     * @param email : User Email that needs to be searched
+     * @return Boolean : True if found, otherwise false.
+     */
 
     public Boolean getUserByEmail(final String email){
         try{
@@ -39,5 +55,21 @@ public class UserDao {
         {
             return false;
         }
+    }
+
+    public UserEntity searchUserByUsername(final String userName){
+        try{
+            return entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
+                    .setParameter("userName", userName).getSingleResult();
+        }
+        catch (NoResultException nre)
+        {
+            return null;
+        }
+    }
+
+    public UserAuthEntity createAuthToken(final UserAuthEntity authEntity){
+        entityManager.persist(authEntity);
+        return authEntity;
     }
 }
