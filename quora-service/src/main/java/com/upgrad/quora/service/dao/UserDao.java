@@ -39,12 +39,12 @@ public class UserDao {
             return false;
         }
     }
+
     /**
      * Database Operation to search user by user email
      * @param email : User Email that needs to be searched
      * @return Boolean : True if found, otherwise false.
      */
-
     public Boolean getUserByEmail(final String email){
         try{
             UserEntity result = entityManager.createNamedQuery("getUserByEmail", UserEntity.class)
@@ -57,6 +57,11 @@ public class UserDao {
         }
     }
 
+    /**
+     * Database Operation to search user by UserName
+     * @param userName : Username that needs to be searched
+     * @return UserEntity if found, null otherwise
+     */
     public UserEntity searchUserByUsername(final String userName){
         try{
             return entityManager.createNamedQuery("getUserByUserName", UserEntity.class)

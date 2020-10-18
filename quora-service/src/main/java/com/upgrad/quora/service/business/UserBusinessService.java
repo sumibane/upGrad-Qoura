@@ -47,6 +47,13 @@ public class UserBusinessService {
     }
 
 
+    /**
+     * The method will validate the user name and emil and login if both are correct
+     * @param userName : Decrypted Username
+     *        password : Decrypted Password
+     * @return UserAuthEntitiy : Authenication Token Entity
+     * @throws AuthenticationFailedException only if authentication fails
+     */
     @Transactional
     public UserAuthEntity signin(final String userName, final String password) throws AuthenticationFailedException{
         UserEntity userEntity = userDao.searchUserByUsername(userName);

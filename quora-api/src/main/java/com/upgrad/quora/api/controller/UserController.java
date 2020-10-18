@@ -62,6 +62,12 @@ public class UserController {
     }
 
 
+    /**
+     * Controller Method for User Sign in Function
+     * @param authorization : HTTP Authorization header
+     * @return SigninResponse : HTTP Signin Response
+     * @throws AuthenticationFailedException
+     */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SigninResponse> signin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException{
         //Base64 decoder and remove "Basic "
