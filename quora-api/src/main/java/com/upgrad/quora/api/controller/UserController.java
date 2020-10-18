@@ -22,9 +22,12 @@ public class UserController {
     @Autowired
     private UserBusinessService userBusinessService;
 
-    /*
-     * Sign up method called for the endpoint "/user/signup"
-     * */
+    /**
+     * Controller Method for User Signup Function
+     * @param SignupUserRequest : HTTP User Request
+     * @return SingupUserResponse : HTTP User Response
+     * @throws SignUpRestrictedException
+     */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces =  MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignupUserResponse> signup (final SignupUserRequest request) throws SignUpRestrictedException{
