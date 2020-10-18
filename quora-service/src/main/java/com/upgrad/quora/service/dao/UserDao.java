@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.dao;
 
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -24,12 +25,12 @@ public class UserDao {
 
     /**
      * Database Operation to search user by UserName
-     * @param String : Username that needs to be searched
+     * @param userName : Username that needs to be searched
      * @return Boolean : True if found, otherwise false.
      */
     public Boolean getUserByUserName(final String userName){
         try{
-              UserEntity result = entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
+              entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
                     .setParameter("userName", userName).getSingleResult();
               return true;
         }
@@ -40,7 +41,7 @@ public class UserDao {
     }
     /**
      * Database Operation to search user by user email
-     * @param String : User Email that needs to be searched
+     * @param email : User Email that needs to be searched
      * @return Boolean : True if found, otherwise false.
      */
 
@@ -54,5 +55,21 @@ public class UserDao {
         {
             return false;
         }
+    }
+
+    public UserEntity searchUserByUsername(final String userName){
+        try{
+            return entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
+                    .setParameter("userName", userName).getSingleResult();
+        }
+        catch (NoResultException nre)
+        {
+            return null;
+        }
+    }
+
+    public UserAuthEntity createAuthToken(final UserAuthEntity authEntity){
+        entityManager.persist(authEntity);
+        return authEntity;
     }
 }
