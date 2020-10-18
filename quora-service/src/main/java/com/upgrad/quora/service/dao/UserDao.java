@@ -98,7 +98,21 @@ public class UserDao {
         }
     }
 
+    /**
+     * Database Operation update the Logout Time
+     * @param userAuthEntity : UserAuthEntity Acess token
+     */
     public void updateLogoutTime(UserAuthEntity userAuthEntity){
         entityManager.merge(userAuthEntity);
+    }
+
+    public UserEntity getUserById(final String id){
+        try{
+            return entityManager.createNamedQuery("getUserByUuid", UserEntity.class)
+                    .setParameter("uuid", id).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
     }
 }
