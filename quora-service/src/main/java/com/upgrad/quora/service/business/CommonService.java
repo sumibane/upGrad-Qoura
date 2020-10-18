@@ -13,6 +13,14 @@ public class CommonService {
     @Autowired
     private UserDao userDao;
 
+    /**
+     * Service Method to get the User profile based on the user UUID
+     * @param id : UUID of the user
+     * @param authorization : Acess Token generated during user Login.
+     * @return UserEntity : Model object of UserEntity
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws UserNotFoundException : if UUID of the user is invalid
+     */
     public UserEntity getUserProfile(final String id, final String authorization) throws AuthorizationFailedException, UserNotFoundException{
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);

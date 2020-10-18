@@ -106,6 +106,11 @@ public class UserDao {
         entityManager.merge(userAuthEntity);
     }
 
+    /**
+     * Database Operation search user by the UUID
+     * @param id : User UUID
+     * @return UserEntity Model
+     */
     public UserEntity getUserById(final String id){
         try{
             return entityManager.createNamedQuery("getUserByUuid", UserEntity.class)

@@ -17,6 +17,14 @@ public class CommonController {
     @Autowired
     private CommonService commonService;
 
+    /**
+     * Controller Method to view User Profile details based on the User UUID
+     * @param userId : UUID of the user
+     * @param authorization : Acess Token generated during user Login.
+     * @return UserDetailsResponse : Models all the user profile details
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws UserNotFoundException : if UUID of the user is invalid
+     */
     @RequestMapping(method = RequestMethod.GET , path = "/userprofile/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDetailsResponse> loadUserProfile(@PathVariable("userId") final String userId,
     @RequestHeader("authorization") final String authorization) throws UserNotFoundException, AuthorizationFailedException {
