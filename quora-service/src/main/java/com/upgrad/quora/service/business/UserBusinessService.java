@@ -86,7 +86,7 @@ public class UserBusinessService {
 
 
     /**
-     * The method will validate the user name and emil and login if both are correct
+     * The method will allow the user to sign out from the application.
      * @param authorization : HTTP Basic Authorization Header
      * @return UserEntity : Detail of the user being signed out
      * @throws SignOutRestrictedException when the function is called without the user being logged in
@@ -100,6 +100,7 @@ public class UserBusinessService {
 
         final ZonedDateTime now = ZonedDateTime.now();
         userAuthEntity.setLogoutAt(now);
+        userDao.updateLogoutTime(userAuthEntity);
         return userAuthEntity.getUserid();
     }
 }

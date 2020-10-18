@@ -97,4 +97,8 @@ public class UserDao {
             return null;
         }
     }
+
+    public void updateLogoutTime(UserAuthEntity userAuthEntity){
+        entityManager.merge(userAuthEntity);
+    }
 }
