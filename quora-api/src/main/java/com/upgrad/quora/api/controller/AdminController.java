@@ -22,6 +22,7 @@ public class AdminController {
      * @param userId : User UUID accepted as part of the URL Path
      * @param authorization: HTTP Header authorization
      * @return UserDeleteResponse : HTTP User Delete Response
+     * @author Jithesh Nanat
      */
     @RequestMapping(method = RequestMethod.DELETE , path = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDeleteResponse> deleteUser(
