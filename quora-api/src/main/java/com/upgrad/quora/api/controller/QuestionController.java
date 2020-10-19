@@ -96,6 +96,14 @@ public class QuestionController {
         return new ResponseEntity<>(questionDetailsResponses,HttpStatus.OK);
     }
 
+    /**
+     * Controller to edit Questions based on question id
+     * @param accessToken : Bearer Authentication
+     * @param questionId : Question Id from HTTP header to get update the question
+     * @return QuestionEditResponse : List of HTTP Response
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws InvalidQuestionException : if the question Uid or role is doesn't match
+     */
     @RequestMapping(method = RequestMethod.PUT, path = "/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestion
             (@RequestHeader("authorization") final String accessToken,@PathVariable("questionId") final String questionId

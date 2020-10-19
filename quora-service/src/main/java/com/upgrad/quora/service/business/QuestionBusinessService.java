@@ -42,6 +42,13 @@ public class QuestionBusinessService {
         return allQuestions;
     }
 
+    /**
+     * Helper function to retrieve Question by their UID
+     * To increase code re-usability
+     * @param id : Question Id to be searched
+     * @return QuestionEntity : Model object of QuestionEntity class
+     * @throws InvalidQuestionException : if the question Uid or role is doesn't match
+     */
     @Transactional
     public QuestionEntity getQuestionById(String id) throws InvalidQuestionException{
         QuestionEntity questionEntity = questionDao.getQuestionById(id);
@@ -51,6 +58,13 @@ public class QuestionBusinessService {
         return questionEntity;
     }
 
+    /**
+     * Helper function to validated the owner of a question
+     * To increase code re-usability
+     * @param userAuthEntity : Model Object of UserAuthEntity class
+     * @param  questionEntity : Model object of QuestionEntity class
+     * @return boolean : True if the owner is same, false otherwise
+     */
     public Boolean isQuestionOwner(UserAuthEntity userAuthEntity, QuestionEntity questionEntity){
         if(questionEntity.getUserId().getUuid().equals(userAuthEntity.getUserid().getUuid()))
             return true;
@@ -58,6 +72,14 @@ public class QuestionBusinessService {
             return false;
     }
 
+    /**
+     * Business service to edit specified question
+     * @param uuid : Question Id for the question that is being edited
+     * @param accessToken : Bearer Auth token
+     * @return String : UUID of the question edited
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws InvalidQuestionException : if the question Uid or role is doesn't match
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public String editQuestion(String uuid, String questionContent, String accessToken) throws InvalidQuestionException, AuthorizationFailedException{
         QuestionEntity question = getQuestionById(uuid);

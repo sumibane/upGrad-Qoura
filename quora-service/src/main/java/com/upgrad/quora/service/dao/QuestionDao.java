@@ -42,6 +42,11 @@ public class QuestionDao {
         }
     }
 
+    /**
+     * Database Transaction to retrieve question based on Id
+     * @param questionId : Question Id of the question
+     * @return QuestionEntity : Result List of QuestionEntity
+     */
     public QuestionEntity getQuestionById(final String questionId){
         try{
             return entityManager.createNamedQuery("getQuestionById", QuestionEntity.class)
@@ -52,6 +57,11 @@ public class QuestionDao {
         }
     }
 
+    /**
+     * Database Transaction to edit a question based on the question id
+     * @param uuid : Question Id of the question
+     * @param content : Updated Question content
+     */
     public void editQuestion(String uuid, String content){
         try{
             entityManager.createNamedQuery("editQuestionById")
