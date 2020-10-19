@@ -19,6 +19,14 @@ public class AnswerController {
     @Autowired
     private AnswerBusinessService answerBusinessService;
 
+    /**
+     * Controller function for creating new Answer
+     * @param questionId : Question Id against which the answer is created
+     * @param accessToken: Bearer Token
+     * @return AnswerResponse : HTTP Answer Response
+     * @throws AuthorizationFailedException : For invalid Access tokens
+     * @throws  InvalidQuestionException : For invalid Question ids
+     */
     @RequestMapping(method = RequestMethod.PUT, path = "/{questionId}/answer/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AnswerResponse> createAnswer(
             @RequestHeader("authorization") final String accessToken,

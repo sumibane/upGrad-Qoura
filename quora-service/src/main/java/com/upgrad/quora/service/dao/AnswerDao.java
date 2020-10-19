@@ -12,6 +12,10 @@ public class AnswerDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Database Transaction for persist changes in the ANSWER table
+     * @param answerEntity : Model of the Answer Entity
+     */
     public void createAnswer(AnswerEntity answerEntity){
         entityManager.persist(answerEntity);
     }

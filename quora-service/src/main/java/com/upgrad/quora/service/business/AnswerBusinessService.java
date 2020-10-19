@@ -26,6 +26,11 @@ public class AnswerBusinessService {
     @Autowired
     private AnswerDao answerDao;
 
+    /**
+     * Supporting Method to check User LoggedIn Status
+     * @param userAuthEntity : Model of the User Authentication Entity
+     * @return boolean : true if the user is logged in, false other wise.
+     */
     public boolean checkUserSignedIn(UserAuthEntity userAuthEntity){
         boolean result = false;
         if(userAuthEntity != null && userAuthEntity.getLoginAt() != null){
@@ -34,6 +39,16 @@ public class AnswerBusinessService {
         }
         return result;
     }
+
+    /**
+     * Service Method to get the create new Answer
+     * @param questionId : UUID of the question
+     * @param accessToken : Acess Token generated during user Login.
+     * @param answerContent : The data received by HTTP Request
+     * @return AnswerEntity : Model object of AnswerEntity
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws InvalidQuestionException : if UUId of the question is invalid
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity createAnswer(final String accessToken, String questionId, String answerContent) throws AuthorizationFailedException, InvalidQuestionException{
         UserAuthEntity userAuthEntity = commonService.getAuthToken(accessToken);
