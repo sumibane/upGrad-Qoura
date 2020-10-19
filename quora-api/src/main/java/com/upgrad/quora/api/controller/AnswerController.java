@@ -12,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
 public class AnswerController {
@@ -81,5 +84,33 @@ public class AnswerController {
         answerDeleteResponse.status("ANSWER DELETED");
 
         return new ResponseEntity<>(answerDeleteResponse, HttpStatus.OK);
+    }
+
+    /**
+     * Controller function for retrieve answers for a question
+     * @param questionId : Part of HHTP Request for the selected question
+     * @param accessToken: Bearer Token
+     * @return AnswerDelete : HTTP Answer Delete Response
+     * @throws AuthorizationFailedException : For invalid Access tokens
+     * @throws  InvalidQuestionException : For invalid Question UUID
+     */
+    @RequestMapping(method = RequestMethod.GET, path = "/answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswers(
+            @RequestHeader("authorization") final String accessToken, @PathVariable("questionId") final String questionId)
+        throws AuthorizationFailedException, InvalidQuestionException{
+        List<AnswerEntity> answerEntities = answerBusinessService.getAllAnswer(accessToken, questionId);
+
+        List<AnswerDetailsResponse> answerDetailsResponses = new LinkedList<>();
+        if(!answerEntities.isEmpty()){
+            for(AnswerEntity answerEntity : answerEntities){
+                AnswerDetailsResponse answerDetailsResponse = new AnswerDetailsResponse();
+                answerDetailsResponse.id(answerEntity.getUuid());
+                answerDetailsResponse.answerContent(answerEntity.getAnswer());
+                answerDetailsResponse.questionContent(answerEntity.getQuestion().getContent());
+
+                answerDetailsResponses.add(answerDetailsResponse);
+            }
+        }
+        return new ResponseEntity<>(answerDetailsResponses, HttpStatus.OK);
     }
 }

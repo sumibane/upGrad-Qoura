@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -170,6 +171,31 @@ public class AnswerBusinessService {
             }
             else
                 throw new AuthorizationFailedException("ATHR-002","User is signed out. Sign in first to delete an answer");
+        }
+        else
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+    }
+
+    /**
+     * Service Method to get the retrieve answer for given question
+     * @param questionId : UUID of the question
+     * @param accessToken : Acess Token generated during user Login.
+     * @throws AuthorizationFailedException : if AUTH token is invalid or not active
+     * @throws InvalidQuestionException : For invalid Question UUID
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<AnswerEntity> getAllAnswer(final String accessToken, final String questionId) throws AuthorizationFailedException, InvalidQuestionException{
+        UserAuthEntity userAuthEntity = commonService.getAuthToken(accessToken);
+        if(userAuthEntity != null){
+            if(checkUserSignedIn(userAuthEntity)){
+                QuestionEntity questionEntity = questionBusinessService.getQuestionById(questionId);
+                if(questionEntity != null){
+                    return answerDao.getAllAnswers(questionEntity.getId());
+                }
+                throw new InvalidQuestionException("QUES-001", "The question with entered uuid whose details are to be seen does not exist");
+            }
+            else
+                throw new AuthorizationFailedException("ATHR-002","User is signed out. Sign in first to get the answer");
         }
         else
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
