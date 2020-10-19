@@ -1,6 +1,7 @@
 package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -84,6 +85,21 @@ public class QuestionDao {
 ;        }
         catch (Exception e){
             System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Database Transaction for retireve  Questions specific to the user
+     * @param id : UserEntity model of the user
+     * @return List<QuestionEntity> : Result List of QuestionEntity
+     */
+    public List<QuestionEntity> getAllQuestionByUser(final UserEntity id){
+        try{
+            return entityManager.createNamedQuery("getAllQuestionByUser", QuestionEntity.class)
+                    .setParameter("userId", id).getResultList();
+        }
+        catch (Exception e){
+            return null;
         }
     }
 }

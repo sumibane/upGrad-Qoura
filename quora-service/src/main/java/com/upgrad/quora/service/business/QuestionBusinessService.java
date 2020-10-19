@@ -3,6 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,5 +112,15 @@ public class QuestionBusinessService {
         else{
             throw new AuthorizationFailedException("ATH-003", "Only the question owner or admin can delete the question");
         }
+    }
+
+    /**
+     * Business service to get all questions
+     * @param userId : UserEntity model of the user
+     * @return List<QuestionEntity> : Model object of QuestionEntity class
+     */
+    public List<QuestionEntity> getAllQuestionsByUser(final UserEntity userId){
+        List<QuestionEntity> allQuestions = questionDao.getAllQuestionByUser(userId);
+        return allQuestions;
     }
 }
