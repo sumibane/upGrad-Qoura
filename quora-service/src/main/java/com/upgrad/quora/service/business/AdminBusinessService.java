@@ -19,6 +19,11 @@ public class AdminBusinessService {
     @Autowired
     private CommonService commonService;
 
+    /**
+     * To validate if the user is having a role of Admin
+     * @param accessToken: JWT token
+     * @return boolean : true if the user is an admin, false otherwise
+     */
     private boolean confirmAdmin(final String accessToken) throws AuthorizationFailedException{
         UserAuthEntity userToken = commonService.commonProfiles(accessToken);
         if(userToken.getUserid().getRole().equals("admin"))
@@ -27,6 +32,14 @@ public class AdminBusinessService {
             throw new AuthorizationFailedException("ATHR-003","Unauthorized Access, Entered user is not an admin");
     }
 
+    /**
+     * Business Logic to delete the user
+     * @param accessToken : JWT Authorization
+     * @param userId : User UUID
+     * @return String : User UUId of the deleted User
+     * @throws AuthorizationFailedException : the user is not authorized to delete
+     * @throws UserNotFoundException: the user doesn't exist in the database
+     */
     @Transactional
     public String deleteUser(String accessToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
         UserEntity userEntity = commonService.getUserById(userId);

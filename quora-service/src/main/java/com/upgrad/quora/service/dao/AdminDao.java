@@ -9,7 +9,10 @@ import javax.persistence.PersistenceContext;
 public class AdminDao {
     @PersistenceContext
     private EntityManager entityManager;
-
+    /**
+     * SQL transaction for Deletion of User
+     * @param userId : User UUID
+     */
     public void deleteUser(final String userId){
         try{
             entityManager.createNamedQuery("deleteUserById")

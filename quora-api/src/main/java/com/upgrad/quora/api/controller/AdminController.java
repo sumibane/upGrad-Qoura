@@ -17,6 +17,12 @@ public class AdminController {
     @Autowired
     private AdminBusinessService adminBusinessService;
 
+    /**
+     * Controller function for administrative deleteion task
+     * @param userId : User UUID accepted as part of the URL Path
+     * @param authorization: HTTP Header authorization
+     * @return UserDeleteResponse : HTTP User Delete Response
+     */
     @RequestMapping(method = RequestMethod.DELETE , path = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDeleteResponse> deleteUser(
             @PathVariable("userId") final String userId,
