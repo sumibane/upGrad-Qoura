@@ -28,6 +28,10 @@ public class CommonService {
         return userAuthEntity;
     }
 
+    public UserAuthEntity getAuthToken(final String authorization){
+        return userDao.getUserAuthToken(authorization);
+    }
+
     /**
      * Supporting Function to get User by ID
      * @param userId : User UUID
