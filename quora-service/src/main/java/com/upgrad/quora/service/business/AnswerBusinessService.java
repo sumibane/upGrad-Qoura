@@ -4,6 +4,8 @@ import com.upgrad.quora.service.dao.AnswerDao;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
+import com.upgrad.quora.service.entity.UserEntity;
+import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,28 @@ public class AnswerBusinessService {
     }
 
     /**
+     * Supporting Method to get Answer by the Answer UUId
+     * @param uuid : Answer UUId whose records needs to be fetched
+     * @return AnswerEntity : Model of the User Answer Entity
+     */
+    @Transactional
+    public AnswerEntity getAnswerForAnswerId(String uuid) {
+        return answerDao.getAnswerForAnswerId(uuid);
+    }
+
+    /**
+     * Supporting Method to check if the user is the owner of the answer
+     * @param user : Model of the User Answer Entity holding information about User Login
+     * @param answerOwner : Model of the User Answer Entity holding information about answer being updated
+     * @return boolean : true if the user is the owner of the answer, false otherwise
+     */
+    public boolean isAnswerOwner(UserEntity user, UserEntity answerOwner){
+        if(user.getUuid().equals(answerOwner.getUuid()))
+            return true;
+        return false;
+    }
+
+    /**
      * Service Method to get the create new Answer
      * @param questionId : UUID of the question
      * @param accessToken : Acess Token generated during user Login.
@@ -74,5 +98,38 @@ public class AnswerBusinessService {
         else
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         return answerEntity;
+    }
+
+    /**
+     * Service Method to get the update an Answer
+     * @param answerId : UUID of the answer requested for updation
+     * @param accessToken : Acess Token generated during user Login.
+     * @param answerContent : The data received by HTTP Request
+     * @return AnswerEntity : Model object of AnswerEntity
+     * @throws AuthorizationFailedException : if AUTH token is invalid or not active
+     * @throws AnswerNotFoundException : if the Answer is not found in the database
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AnswerEntity updateAnswer(final String accessToken, final String answerId, final String answerContent) throws AuthorizationFailedException, AnswerNotFoundException{
+        UserAuthEntity userAuthEntity = commonService.getAuthToken(accessToken);
+        if(userAuthEntity != null){
+            if(checkUserSignedIn(userAuthEntity)){
+                AnswerEntity answerEntity = getAnswerForAnswerId(answerId);
+                if(answerEntity != null){
+                    if(isAnswerOwner(userAuthEntity.getUserid(),answerEntity.getUser())){
+                        answerEntity.setAnswer(answerContent);
+                        return answerDao.updateAnswer(answerEntity);
+                    }
+                    else
+                        throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
+                }
+                else
+                    throw  new AnswerNotFoundException("ANS-001","Entered answer uuid does not exist");
+            }
+            else
+                throw new AuthorizationFailedException("ATHR-002","User is signed out. Sign in first to edit an answer");
+        }
+        else
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
     }
 }
