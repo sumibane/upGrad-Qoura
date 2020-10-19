@@ -35,6 +35,7 @@ public class QuestionController {
      * TO provide code Reusability
      * @param allQuestions : A List of Question Entity
      * @return List<QuestionDetailsResponse> : A linked list of HTTP Response
+     * @author : Govardhan K
      */
     private List<QuestionDetailsResponse> buildQuestionDetailsResponseList(List<QuestionEntity> allQuestions){
         //Create a LinkedList to save all the questions
@@ -57,6 +58,7 @@ public class QuestionController {
      * @param accessToken : Bearer Authentication
      * @return QuestionResponse : HTTP Response
      * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @author : Govardhan K
      */
     @RequestMapping(method = RequestMethod.POST, path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QuestionResponse> createQuestion(
@@ -85,6 +87,7 @@ public class QuestionController {
      * @param accessToken : Bearer Authentication
      * @return QuestionResponse : List of HTTP Response
      * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @author : Govardhan K
      */
     @RequestMapping(method = RequestMethod.GET, path = "/all" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String accessToken)throws AuthorizationFailedException{
@@ -105,6 +108,7 @@ public class QuestionController {
      * @return QuestionEditResponse : List of HTTP Response
      * @throws AuthorizationFailedException : if AUTh token is invalid or not active
      * @throws InvalidQuestionException : if the question Uid or role is doesn't match
+     * @author : Govardhan K
      */
     @RequestMapping(method = RequestMethod.PUT, path = "/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestion
