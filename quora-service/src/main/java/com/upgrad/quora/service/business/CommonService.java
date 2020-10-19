@@ -22,16 +22,25 @@ public class CommonService {
      * @throws UserNotFoundException : if UUID of the user is invalid
      */
     public UserEntity getUserProfile(final String id, final String authorization) throws AuthorizationFailedException, UserNotFoundException{
+        //Check Token
+        commonProfiles(authorization);
 
+        UserEntity userEntity = getUserById(id);
+        if(userEntity == null)
+            throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
+        return userEntity;
+    }
+
+    public UserAuthEntity commonProfiles(String authorization) throws AuthorizationFailedException{
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
         if(userAuthEntity == null)
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         if(userAuthEntity.getLogoutAt() != null)
             throw new AuthorizationFailedException("ATHR-002","User is signed out. Sign in first to get user details");
+        return userAuthEntity;
+    }
 
-        UserEntity userEntity = userDao.getUserById(id);
-        if(userEntity == null)
-            throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
-        return userEntity;
+    public UserEntity getUserById(String userId){
+        return  userDao.getUserById(userId);
     }
 }
