@@ -116,4 +116,26 @@ public class QuestionController {
 
         return new ResponseEntity<>(questionEditResponse, HttpStatus.OK);
     }
+
+
+    /**
+     * Controller to delete Selected question
+     * @param accessToken : Bearer Authentication
+     * @param questionId : Question Id from HTTP header to get update the question
+     * @return QuestionDeleteResponse : HTTP Response
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws InvalidQuestionException : if the question Uid or role is doesn't match
+     */
+    @RequestMapping(method = RequestMethod.DELETE, path = "/delete/{questionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion(
+            @PathVariable("questionId") final String questionId,
+            @RequestHeader("authorization") final String accessToken) throws InvalidQuestionException,AuthorizationFailedException{
+        questionBusinessService.deleteQuestion(accessToken, questionId);
+
+        QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse();
+        questionDeleteResponse.setId(questionId);
+        questionDeleteResponse.setStatus("QUESTION DELETED");
+
+        return new ResponseEntity<>(questionDeleteResponse, HttpStatus.OK);
+    }
 }

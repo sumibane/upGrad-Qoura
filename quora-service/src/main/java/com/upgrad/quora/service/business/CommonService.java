@@ -19,7 +19,7 @@ public class CommonService {
      * @return UserAuthEntity : Model object of UserAuthEntity
      * @throws AuthorizationFailedException : if AUTh token is invalid or not active
      */
-    public UserAuthEntity commonProfiles(String authorization) throws AuthorizationFailedException{
+    public UserAuthEntity commonProfiles(final String authorization) throws AuthorizationFailedException{
         UserAuthEntity userAuthEntity = userDao.getUserAuthToken(authorization);
         if(userAuthEntity == null)
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");

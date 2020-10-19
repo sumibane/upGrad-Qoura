@@ -74,4 +74,16 @@ public class QuestionDao {
         }
     }
 
+    /**
+     * Database Transaction to edit a question based on the question id
+     * @param uuid : Question Id of the question
+     */
+    public void deleteQuestion(String uuid){
+        try{
+            entityManager.createNamedQuery("deleteQuestionById").setParameter("uuid", uuid).executeUpdate();
+;        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 }

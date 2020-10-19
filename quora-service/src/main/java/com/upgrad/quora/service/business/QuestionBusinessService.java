@@ -91,4 +91,25 @@ public class QuestionBusinessService {
             throw new AuthorizationFailedException("ATHR-003","Only the question owner can edit the question");
         return uuid;
     }
+
+    /**
+     * Business service to delete specified question
+     * @param uuid : Question Id for the question that is being edited
+     * @param accessToken : Bearer Auth token
+     * @throws AuthorizationFailedException : if AUTh token is invalid or not active
+     * @throws InvalidQuestionException : if the question Uid or role is doesn't match
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteQuestion(String accessToken, String uuid) throws AuthorizationFailedException, InvalidQuestionException{
+        QuestionEntity questionEntity = getQuestionById(uuid);
+        UserAuthEntity userAuthEntity = commonService.commonProfiles(accessToken);
+
+        final String userRole = userAuthEntity.getUserid().getRole();
+        if(isQuestionOwner(userAuthEntity, questionEntity) || userRole.equals("admin")){
+            questionDao.deleteQuestion(uuid);
+        }
+        else{
+            throw new AuthorizationFailedException("ATH-003", "Only the question owner or admin can delete the question");
+        }
+    }
 }
