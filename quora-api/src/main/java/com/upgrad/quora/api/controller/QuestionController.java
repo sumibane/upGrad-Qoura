@@ -152,7 +152,7 @@ public class QuestionController {
      * @return QuestionResponse : List of HTTP Response
      * @throws AuthorizationFailedException : if AUTh token is invalid or not active
      */
-    @RequestMapping(method = RequestMethod.GET ,  path = "/all/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET , path = "/all/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getQuestionByUser(
             @RequestHeader("authorization") final String accessToken,
             @PathVariable("userId") final String userId) throws AuthorizationFailedException, UserNotFoundException{
