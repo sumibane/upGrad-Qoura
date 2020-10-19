@@ -41,4 +41,27 @@ public class QuestionDao {
             return null;
         }
     }
+
+    public QuestionEntity getQuestionById(final String questionId){
+        try{
+            return entityManager.createNamedQuery("getQuestionById", QuestionEntity.class)
+                    .setParameter("uuid", questionId).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
+    }
+
+    public void editQuestion(String uuid, String content){
+        try{
+            entityManager.createNamedQuery("editQuestionById")
+                    .setParameter("content", content)
+                    .setParameter("uuid", uuid).executeUpdate();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
