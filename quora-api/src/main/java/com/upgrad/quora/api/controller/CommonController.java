@@ -24,6 +24,7 @@ public class CommonController {
      * @return UserDetailsResponse : Models all the user profile details
      * @throws AuthorizationFailedException : if AUTh token is invalid or not active
      * @throws UserNotFoundException : if UUID of the user is invalid
+     * @author Jithesh Nanat
      */
     @RequestMapping(method = RequestMethod.GET , path = "/userprofile/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDetailsResponse> loadUserProfile(@PathVariable("userId") final String userId,
