@@ -123,7 +123,7 @@ public class QuestionController {
     /**
      * Controller to delete Selected question
      *  @username=chowkek@gmail.com
-     *  @name=swapnil chowkekar
+     *  @author=swapnil chowkekar
      * @param accessToken : Bearer Authentication
      * @param questionId : Question Id from HTTP header to get update the question
      * @return QuestionDeleteResponse : HTTP Response
@@ -146,7 +146,7 @@ public class QuestionController {
     /**
      * Controller to get all questions
      *  @username=chowkek@gmail.com
-     *  @name=swapnil chowkekar
+     *  @author=swapnil chowkekar
      * @param accessToken : Bearer Authentication
      * @param userId : UUID of the user whose Questions to be fetched
      * @return QuestionResponse : List of HTTP Response
