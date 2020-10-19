@@ -65,6 +65,18 @@ public class AnswerBusinessService {
     }
 
     /**
+     * Supporting Method to check if the user is an admin
+     * @param user : Model of the User Answer Entity
+     * @return boolean : true if the user is the admin of the answer, false otherwise
+     */
+    public boolean isUserAdmin(UserEntity user){
+        if(user.getRole().equals("admin"))
+            return true;
+        else
+            return false;
+    }
+
+    /**
      * Service Method to get the create new Answer
      * @param questionId : UUID of the question
      * @param accessToken : Acess Token generated during user Login.
@@ -128,6 +140,36 @@ public class AnswerBusinessService {
             }
             else
                 throw new AuthorizationFailedException("ATHR-002","User is signed out. Sign in first to edit an answer");
+        }
+        else
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+    }
+
+    /**
+     * Service Method to get the delete an Answer
+     * @param answerId : UUID of the answer requested for updation
+     * @param accessToken : Acess Token generated during user Login.
+     * @throws AuthorizationFailedException : if AUTH token is invalid or not active
+     * @throws AnswerNotFoundException : if the Answer is not found in the database
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteAnswer(final String accessToken, final String answerId) throws AuthorizationFailedException, AnswerNotFoundException{
+        UserAuthEntity userAuthEntity = commonService.getAuthToken(accessToken);
+        if(userAuthEntity != null){
+            if(checkUserSignedIn(userAuthEntity)){
+                AnswerEntity answerEntity = getAnswerForAnswerId(answerId);
+                if(answerEntity != null){
+                    if(isAnswerOwner(userAuthEntity.getUserid(), answerEntity.getUser()) || isUserAdmin(userAuthEntity.getUserid())){
+                        answerDao.deleteAnswer(answerEntity);
+                    }
+                    else
+                        throw new AuthorizationFailedException("ATHR-003","Only the answer owner or admin can delete the answer");
+                }
+                else
+                    throw new AnswerNotFoundException("ANS-001","Entered answer uuid does not exist");
+            }
+            else
+                throw new AuthorizationFailedException("ATHR-002","User is signed out. Sign in first to delete an answer");
         }
         else
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");

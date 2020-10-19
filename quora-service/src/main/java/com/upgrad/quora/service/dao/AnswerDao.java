@@ -42,4 +42,12 @@ public class AnswerDao {
     public AnswerEntity updateAnswer(AnswerEntity answerEntity){
         return entityManager.merge(answerEntity);
     }
+
+    /**
+     * Database Transaction to delete an Answer
+     * @param answerEntity : Model of the Answer Entity
+     */
+    public void deleteAnswer(AnswerEntity answerEntity){
+        entityManager.remove(answerEntity);
+    }
 }
